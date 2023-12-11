@@ -20,8 +20,8 @@ const search = (event) => {
 </script>
 
 <template>
-  <div class="card formgroup-inline">
-    <div class="field">
+  <div class="card formgroup-inline p-fluid">
+    <div class="field w-14rem">
       <label for="departure" class="p-sr-only">Departure</label>
       <AutoComplete
           id="departure"
@@ -32,7 +32,7 @@ const search = (event) => {
           placeholder="Departure"
       />
     </div>
-    <div class="field">
+    <div class="field w-14rem">
       <label for="destination" class="p-sr-only">Destination</label>
       <AutoComplete
           id="destination"
@@ -43,7 +43,7 @@ const search = (event) => {
           placeholder="Departure"
       />
     </div>
-    <div class="field">
+    <div class="field w-10rem">
       <label for="date" class="p-sr-only">Destination</label>
       <Calendar
           id="date"
@@ -54,7 +54,7 @@ const search = (event) => {
           placeholder="Date"
       />
     </div>
-    <div class="field">
+    <div class="field w-6rem">
       <label for="seats" class="p-sr-only">Seats</label>
       <InputNumber
           id="seats"
@@ -65,13 +65,15 @@ const search = (event) => {
           showButtons
       />
     </div>
-    <Button label="Submit"></Button>
+    <div class="field">
+      <Button label="Submit"></Button>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .card {
-  max-width: 60%;
+  max-width: 80%;
   padding-top: 2rem;
   padding-bottom: 1rem;
 }

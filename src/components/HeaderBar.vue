@@ -5,8 +5,7 @@ import Button from "primevue/button";
 
 <template>
   <header>
-    <div
-        class="header-bar flex justify-content-between align-items-center w-full h-4rem px-8 surface-ground shadow-5 fixed z-5">
+    <div class="header-bar flex justify-content-between align-items-center w-full h-4rem px-8 surface-ground shadow-5 fixed z-5">
       <RouterLink to="/">
         <img alt="RideShare Logo" class="logo" src="@/assets/logo.svg" width="200" height="200"/>
       </RouterLink>
@@ -21,5 +20,6 @@ import Button from "primevue/button";
         </RouterLink>
       </div>
     </div>
+    <div class="space-bar h-4rem"/>
   </header>
 </template>

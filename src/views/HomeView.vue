@@ -8,14 +8,14 @@ import FooterBar from "@/components/FooterBar.vue";
 
 <template>
   <HeaderBar/>
-
-  <div class="content">
-    <h1>Find a Ride</h1>
-    <FindRideForm class="find-ride-form"/>
-    <Feature/>
-    <RideStats class="ride-stats"/>
-  </div>
-
+  <main>
+    <div class="content">
+      <h1>Find a Ride</h1>
+      <FindRideForm class="find-ride-form"/>
+      <Feature/>
+      <RideStats class="ride-stats"/>
+    </div>
+  </main>
   <FooterBar/>
 </template>
 
@@ -36,14 +36,14 @@ h1 {
   font-weight: 500;
   font-size: 3rem;
   margin-bottom: 2rem;
-  margin-top: 18rem;
+  margin-top: 16rem;
 }
 
 .find-ride-form {
   margin-bottom: 8rem;
 }
 
-.ride-stats{
+.ride-stats {
   margin-top: 12rem;
   margin-bottom: 12rem;
 }
