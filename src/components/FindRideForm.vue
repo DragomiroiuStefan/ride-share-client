@@ -1,5 +1,7 @@
 <script setup>
 import {ref} from "vue";
+import router from "@/router/index.js";
+
 import AutoComplete from 'primevue/autocomplete';
 import Calendar from 'primevue/calendar';
 import InputNumber from "primevue/inputnumber";
@@ -15,6 +17,10 @@ const locationOptions = ref([])
 
 const search = (event) => {
   locationOptions.value = [...Array(10).keys()].map((item) => event.query + '-' + item);
+}
+
+function submit() {
+  router.push({name: 'rides'});
 }
 
 </script>
@@ -66,7 +72,7 @@ const search = (event) => {
       />
     </div>
     <div class="field">
-      <Button label="Submit"></Button>
+      <Button @click="submit" label="Submit"></Button>
     </div>
   </div>
 </template>
