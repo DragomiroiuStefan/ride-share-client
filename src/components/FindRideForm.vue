@@ -8,7 +8,7 @@ import InputNumber from "primevue/inputnumber";
 
 const form = ref({
   departure: "",
-  destination: "",
+  arrival: "",
   date: "",
   seats: 1
 })
@@ -39,18 +39,18 @@ function submit() {
       />
     </div>
     <div class="field w-14rem">
-      <label for="destination" class="p-sr-only">Destination</label>
+      <label for="arrival" class="p-sr-only">Arrival</label>
       <AutoComplete
-          id="destination"
-          v-model="form.destination"
+          id="arrival"
+          v-model="form.arrival"
           :suggestions="locationOptions"
           @complete="search"
           force-selection
-          placeholder="Departure"
+          placeholder="Arrival"
       />
     </div>
     <div class="field w-10rem">
-      <label for="date" class="p-sr-only">Destination</label>
+      <label for="date" class="p-sr-only">Date</label>
       <Calendar
           id="date"
           v-model="form.date"

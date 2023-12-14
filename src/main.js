@@ -21,6 +21,8 @@ import InputNumber from "primevue/inputnumber";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
 import Rating from "primevue/rating";
+import Steps from "primevue/steps";
+import Textarea from "primevue/textarea";
 import Timeline from "primevue/timeline";
 
 
@@ -40,6 +42,8 @@ app.component('InputNumber', InputNumber)
 app.component('InputText', InputText)
 app.component('Password', Password)
 app.component('Rating', Rating)
+app.component('Steps', Steps)
+app.component('Textarea', Textarea)
 app.component('Timeline', Timeline)
 
 

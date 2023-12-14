@@ -1,11 +1,8 @@
 <script setup>
 import {ref} from "vue";
-
-
-import HeaderBar from "@/components/HeaderBar.vue";
-import FooterBar from "@/components/FooterBar.vue";
 import FindRideForm from "@/components/FindRideForm.vue";
 import RideInfo from "@/components/RideCard.vue";
+import AppLayout from "@/components/AppLayout/AppLayout.vue";
 
 const ride = ref({
   departure: "Bucuresti",
@@ -25,14 +22,14 @@ const ride = ref({
 </script>
 
 <template>
-  <HeaderBar/>
-  <div class="flex flex-column align-items-center my-6">
-    <FindRideForm class="find-ride-form"/>
-    <h1 class="mt-4"> 3 Rides available </h1>
-    <p class="mb-4">Bucuresti -> Iasi, 5 Dec 2023</p>
-    <RideInfo :ride="ride"/>
-    <RideInfo :ride="ride"/>
-    <RideInfo :ride="ride"/>
-  </div>
-  <FooterBar/>
+  <AppLayout>
+    <div class="flex flex-column align-items-center">
+      <FindRideForm/>
+      <h1 class="mt-4"> 3 Rides available </h1>
+      <p class="mb-4">Bucuresti → Iasi, 5 Dec 2023</p>
+      <RideInfo :ride="ride"/>
+      <RideInfo :ride="ride"/>
+      <RideInfo :ride="ride"/>
+    </div>
+  </AppLayout>
 </template>

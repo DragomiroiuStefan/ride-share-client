@@ -7,7 +7,7 @@ import Button from "primevue/button";
   <header>
     <div class="header-bar flex justify-content-between align-items-center w-full h-4rem px-8 surface-ground shadow-5 fixed z-5">
       <RouterLink to="/">
-        <img alt="RideShare Logo" class="logo" src="@/assets/logo.svg" width="200"/>
+        <img alt="RideShare Logo" class="logo" src="../../assets/logo.svg" width="200"/>
       </RouterLink>
       <div class="flex align-items-center">
         <RouterLink to="/auth/login">

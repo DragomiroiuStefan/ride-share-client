@@ -15,6 +15,18 @@ const router = createRouter({
       component: () => import('../views/RidesView.vue')
     },
     {
+      path: '/ride/:rideId',
+      name: 'ride',
+      props: true,
+      component: () => import('../views/RideView.vue')
+    },
+    {
+      path: '/ride/publish',
+      name: 'publishRide',
+      props: true,
+      component: () => import('../views/PublishRideView.vue')
+    },
+    {
       path: '/auth/login',
       name: 'login',
       component: () => import('../views/auth/LoginView.vue')
