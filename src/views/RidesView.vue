@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import FindRideForm from "@/components/FindRideForm.vue";
 import RideInfo from "@/components/RideCard.vue";
-import AppLayout from "@/components/AppLayout/AppLayout.vue";
+import AppLayout from "@/components/app-layout/AppLayout.vue";
 
 const ride = ref({
   departure: "Bucuresti",

@@ -1,8 +1,8 @@
 <script setup>
 import {ref} from "vue";
 
-import AppLayout from "@/components/AppLayout/AppLayout.vue";
-import SelectRoute from "@/components/publish-ride-steps/SelectRoute.vue";
+import AppLayout from "@/components/app-layout/AppLayout.vue";
+import SelectRoute2 from "@/components/publish-ride-steps/SelectRoute2.vue";
 import SelectDateAndSeats from "@/components/publish-ride-steps/SelectDateAndSeats.vue";
 import SelectSchedule from "@/components/publish-ride-steps/SelectSchedule.vue";
 import SelectPrice from "@/components/publish-ride-steps/SelectPrice.vue";
@@ -47,10 +47,10 @@ function decrementStep() {
 <template>
   <AppLayout>
     <div class="flex flex-column align-items-center my-4">
-      <div class="panel flex flex-column gap-3 w-8">
-        <h1 class="font-bold">Publish Ride</h1>
-        <Steps v-model:activeStep="active" :model="steps"/>
-        <SelectRoute v-if="active === 0"/>
+      <div class="panel flex flex-column gap-3 w-11">
+        <h1 class="font-bold mb-4">Publish Ride</h1>
+        <Steps v-model:activeStep="active" :model="steps" class="mb-6"/>
+        <SelectRoute2 v-if="active === 0"/>
         <SelectDateAndSeats v-if="active === 1"/>
         <SelectSchedule v-if="active === 2"/>
         <SelectPrice v-if="active === 3"/>

@@ -1,6 +1,9 @@
 # ride-share-client
 
-This template should help get you started developing with Vue 3 in Vite.
+### TODO
+
+- delete locations (fix bug)
+- get durations from result.routes.legs
 
 ## Recommended IDE Setup
 

@@ -1,7 +1,7 @@
 <script setup>
 
-import HeaderBar from "@/components/AppLayout/HeaderBar.vue";
-import FooterBar from "@/components/AppLayout/FooterBar.vue";
+import HeaderBar from "@/components/app-layout/HeaderBar.vue";
+import FooterBar from "@/components/app-layout/FooterBar.vue";
 </script>
 
 <template>

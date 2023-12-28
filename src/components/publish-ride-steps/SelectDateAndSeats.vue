@@ -11,7 +11,7 @@ const ride = ref({})
 
 <template>
   <div class="flex justify-content-center">
-  <div class="flex flex-column  align-items-start gap-4 mt-6">
+  <div class="flex flex-column  align-items-start gap-4">
     <label for="date" class="p-sr-only">Date</label>
     <Calendar
         id="date"

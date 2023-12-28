@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 
-import AppLayout from "@/components/AppLayout/AppLayout.vue";
+import AppLayout from "@/components/app-layout/AppLayout.vue";
 import RideDepartureArrivalInfo from "@/components/RideDepartureArrivalInfo.vue";
 import DriverInfo from "@/components/DriverInfo.vue";
 import PassangersInfo from "@/components/PassangersInfo.vue";

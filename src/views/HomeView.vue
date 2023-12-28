@@ -2,8 +2,8 @@
 import FindRideForm from "@/components/FindRideForm.vue";
 import RideStats from "@/components/RideStats.vue";
 import Feature from "@/components/Feature.vue";
-import HeaderBar from "@/components/AppLayout/HeaderBar.vue";
-import FooterBar from "@/components/AppLayout/FooterBar.vue";
+import HeaderBar from "@/components/app-layout/HeaderBar.vue";
+import FooterBar from "@/components/app-layout/FooterBar.vue";
 </script>
 
 <template>
