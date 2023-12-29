@@ -1,73 +1,86 @@
 <script setup>
 import {onMounted, ref} from "vue";
+import AutoComplete from 'primevue/autocomplete';
 
-let map, directionsService, directionsRenderer;
-let autocompleteOptions = {
-  componentRestrictions: {country: "ro"},
-  fields: ["address_components", "geometry", "name"],
-};
+const directionsRequest = ref({
+  departure: null,
+  arrival: null,
+  waypoints: []
+})
 
-const waypointsNo = ref(0);
-const waypoints = ref([]);
+const locationOptions = ref([])
+
+const search = (event) => {
+  let request = {
+    input: event.query,
+    componentRestrictions: {country: "ro"}
+  };
+  autocompleteService.getPredictions(request, function (predictions, status) {
+    if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
+      console.log(status);  // TODO throw error
+      return;
+    }
+
+    locationOptions.value = predictions.map(prediction => prediction.description)
+  });
+}
+
+let map, directionsService, directionsRenderer, autocompleteService;
 
 onMounted(() => {
   async function initMap() {
     const {Map} = await google.maps.importLibrary("maps");
-    const {Autocomplete} = await google.maps.importLibrary("places");
+    await google.maps.importLibrary("places");
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
+    autocompleteService = new google.maps.places.AutocompleteService();
 
     map = new Map(document.getElementById("map"), {
       zoom: 7,
       center: {lat: 45.944, lng: 25.009},
     });
     directionsRenderer.setMap(map);
-
-
-    const departure = new google.maps.places.Autocomplete(document.getElementById("departure"), autocompleteOptions);
-    const arrival = new google.maps.places.Autocomplete(document.getElementById("arrival"), autocompleteOptions);
-
-    // for (let i = 1; i <= waypointsNo.value; i++) {
-    //   const waypoint = new google.maps.places.Autocomplete(document.getElementById("waypoint-" + i), autocompleteOptions);
-    //   waypoints.value.push(waypoint);
-    // }
-
-    departure.addListener('place_changed', function () {
-      const place = departure.getPlace();
-      if (place.geometry) {
-        console.log(place)
-      }
-    });
-
-    arrival.addListener('place_changed', function () {
-      const place = arrival.getPlace();
-      if (place.geometry) {
-        console.log(place)
-      }
-    });
   }
 
   initMap();
 })
 
-function calcRoute() {
-  const directionRequest = {
-    origin: document.getElementById("departure").value,
-    destination: document.getElementById("arrival").value,
-    waypoints: [
-      {
-        location: 'ParkLake Shopping Center',
-        stopover: true
-      }],
+function findRoute() {
+  let waypointsNotEmpty = true;
+  for (let waypoint of directionsRequest.value.waypoints) {
+    if (!waypoint) {
+      waypointsNotEmpty = false;
+    }
+  }
+  if (directionsRequest.value.departure && directionsRequest.value.arrival && waypointsNotEmpty) {
+    sendDirectionsRequest();
+  }
+}
+
+function sendDirectionsRequest() {
+  const request = {
+    origin: directionsRequest.value.departure,
+    destination: directionsRequest.value.arrival,
+    waypoints: [],
     provideRouteAlternatives: false,
     travelMode: 'DRIVING',
     drivingOptions: {
       departureTime: new Date(/* now, or future date */),
     },
-    // unitSystem: google.maps.UnitSystem.METRIC,
+    unitSystem: google.maps.UnitSystem.METRIC,
     region: 'ro'
   }
-  directionsService.route(directionRequest, function (result, status) {
+  if (directionsRequest.value.waypoints.length > 0) {
+    request.waypoints = [];
+    for (const waypoint of directionsRequest.value.waypoints) {
+      request.waypoints.push({
+        location: waypoint,
+        stopover: true
+      })
+    }
+  }
+
+  directionsService.route(request, function (result, status) {
     if (status === 'OK') {
       directionsRenderer.setDirections(result);
       console.log(result)
@@ -76,9 +89,12 @@ function calcRoute() {
 }
 
 function addStop() {
-  waypointsNo.value++;
-  const waypoint = new google.maps.places.Autocomplete(document.getElementById("waypoint-" + waypointsNo.value), autocompleteOptions);
-  waypoints.value.push(waypoint);
+  directionsRequest.value.waypoints.push("");
+}
+
+function removeStop(waypoint) {
+  directionsRequest.value.waypoints = directionsRequest.value.waypoints.filter((w) => w !== waypoint);
+  findRoute();
 }
 
 
@@ -86,12 +102,56 @@ function addStop() {
 
 <template>
   <div class="flex justify-content-between">
-    <div class="flex flex-column align-items-center gap-3">
-      <input id="departure" type="text"/>
-      <input v-for="i in waypointsNo" v-bind:key="i" :id="'waypoint-' + i" type="text"/>
-      <input id="arrival" type="text"/>
+    <div class="flex flex-column align-items-start gap-3">
+      <AutoComplete
+          id="departure"
+          v-model="directionsRequest.departure"
+          :suggestions="locationOptions"
+          @complete="search"
+          @item-select="findRoute"
+          forceSelection
+          placeholder="Choose departure">
+        <template #option="slotProps">
+          <div class="flex align-options-center">
+            <i class="pi pi-map-marker text-primary mr-3 mt-1"></i>
+            <div>{{ slotProps.option }}</div>
+          </div>
+        </template>
+      </AutoComplete>
+      <div v-for="(waypoint, index) in directionsRequest.waypoints" :key="index">
+        <AutoComplete
+            id="departure"
+            v-model="directionsRequest.waypoints[index]"
+            :suggestions="locationOptions"
+            @complete="search"
+            @item-select="findRoute"
+            forceSelection
+            placeholder="Choose stop">
+          <template #option="slotProps">
+            <div class="flex align-options-center">
+              <i class="pi pi-map-marker text-primary mr-3 mt-1"></i>
+              <div>{{ slotProps.option }}</div>
+            </div>
+          </template>
+        </AutoComplete>
+        <Button @click="removeStop(waypoint)" class="ml-2" icon="pi pi-times" severity="secondary" text rounded aria-label="Cancel" />
+      </div>
+      <AutoComplete
+          id="arrival"
+          v-model="directionsRequest.arrival"
+          :suggestions="locationOptions"
+          @complete="search"
+          @item-select="findRoute"
+          forceSelection
+          placeholder="Choose arrival">
+        <template #option="slotProps">
+          <div class="flex align-options-center">
+            <i class="pi pi-map-marker text-primary mr-3 mt-1"></i>
+            <div>{{ slotProps.option }}</div>
+          </div>
+        </template>
+      </AutoComplete>
       <Button @click="addStop" label="Add Stop" text/>
-      <button @click="calcRoute">Find Route</button>
     </div>
     <div id="map"/>
   </div>
@@ -103,44 +163,3 @@ function addStop() {
   height: 600px;
 }
 </style>
-
-
-<!--
-const ride = ref({})
-
-const locationOptions = ref([])
-
-const search = (event) => {
-  locationOptions.value = [...Array(10).keys()].map((item) => event.query + '-' + item);
-}
-
-<AutoComplete
-    id="departure"
-    v-model="ride.departure"
-    :suggestions="locationOptions"
-    @complete="search"
-    forceSelection
-    placeholder="Choose location">
-  <template #option="slotProps">
-    <div class="flex align-options-center">
-      <i class="pi pi-map-marker text-primary mr-3 mt-1"></i>
-      <div>{{ slotProps.option }}</div>
-    </div>
-  </template>
-</AutoComplete>
-<AutoComplete
-    id="arrival"
-    v-model="ride.arrival"
-    :suggestions="locationOptions"
-    @complete="search"
-    forceSelection
-    placeholder="Choose location">
-  <template #option="slotProps">
-    <div class="flex align-options-center">
-      <i class="pi pi-map-marker text-primary mr-3 mt-1"></i>
-      <div>{{ slotProps.option }}</div>
-    </div>
-  </template>
-</AutoComplete>
-
--->
