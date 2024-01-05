@@ -12,10 +12,10 @@ const active = ref(0);
 
 const steps = ref([
   {
-    label: 'Route'
+    label: 'Date & Seats'
   },
   {
-    label: 'Date & Seats'
+    label: 'Route'
   },
   {
     label: 'Schedule'
@@ -50,8 +50,8 @@ function decrementStep() {
       <div class="panel flex flex-column gap-3 w-11">
         <h1 class="font-bold mb-4">Publish Ride</h1>
         <Steps v-model:activeStep="active" :model="steps" class="mb-6"/>
-        <SelectRoute v-if="active === 0"/>
-        <SelectDateAndSeats v-if="active === 1"/>
+        <SelectDateAndSeats v-if="active === 0"/>
+        <SelectRoute v-if="active === 1"/>
         <SelectSchedule v-if="active === 2"/>
         <SelectPrice v-if="active === 3"/>
         <SelectVehicle v-if="active === 4"/>

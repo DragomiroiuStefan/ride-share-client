@@ -1,6 +1,9 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import AutoComplete from 'primevue/autocomplete';
+import {useRideStore} from "@/stores/ride.js";
+
+const rideStore = useRideStore()
 
 const directionsRequest = ref({
   departure: null,
@@ -9,21 +12,6 @@ const directionsRequest = ref({
 })
 
 const locationOptions = ref([])
-
-const search = (event) => {
-  let request = {
-    input: event.query,
-    componentRestrictions: {country: "ro"}
-  };
-  autocompleteService.getPredictions(request, function (predictions, status) {
-    if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
-      console.log(status);  // TODO throw error
-      return;
-    }
-
-    locationOptions.value = predictions.map(prediction => prediction.description)
-  });
-}
 
 let map, directionsService, directionsRenderer, autocompleteService;
 
@@ -45,6 +33,20 @@ onMounted(() => {
   initMap();
 })
 
+const search = (event) => {
+  let request = {
+    input: event.query,
+    componentRestrictions: {country: "ro"}
+  };
+  autocompleteService.getPredictions(request, function (predictions, status) {
+    if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
+      console.log(status);  // TODO throw error
+      return;
+    }
+    locationOptions.value = predictions.map(prediction => prediction.description)
+  });
+}
+
 function findRoute() {
   let waypointsNotEmpty = true;
   for (let waypoint of directionsRequest.value.waypoints) {
@@ -65,11 +67,12 @@ function sendDirectionsRequest() {
     provideRouteAlternatives: false,
     travelMode: 'DRIVING',
     drivingOptions: {
-      departureTime: new Date(/* now, or future date */),
+      departureTime: rideStore.ride.date,
     },
     unitSystem: google.maps.UnitSystem.METRIC,
     region: 'ro'
   }
+  // Add waypoints if any
   if (directionsRequest.value.waypoints.length > 0) {
     request.waypoints = [];
     for (const waypoint of directionsRequest.value.waypoints) {
@@ -83,9 +86,24 @@ function sendDirectionsRequest() {
   directionsService.route(request, function (result, status) {
     if (status === 'OK') {
       directionsRenderer.setDirections(result);
-      console.log(result)
+      console.log(result);
+      setRide(result);
     }
   });
+}
+
+function setRide(result) {
+  let departureTime = rideStore.ride.date;
+  for (const leg of result.routes[0].legs) {
+    rideStore.ride.connections.push({
+      startAddress: leg.start_address,
+      endAddress: leg.end_address,
+      departureTime: departureTime,
+      arrivalTime: new Date(departureTime.getTime() + leg.duration.value * 1000),
+      duration: leg.duration
+    });
+    departureTime += departureTime + leg.duration;
+  }
 }
 
 function addStop() {
