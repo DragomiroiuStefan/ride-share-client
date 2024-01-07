@@ -17,6 +17,8 @@ import Button from "primevue/button";
 import Calendar from "primevue/calendar";
 import Card from "primevue/card";
 import Checkbox from "primevue/checkbox";
+import FileUpload from "primevue/fileupload";
+import Image from "primevue/image";
 import InputNumber from "primevue/inputnumber";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
@@ -38,6 +40,8 @@ app.component('Button', Button);
 app.component('Calendar', Calendar)
 app.component('Card', Card)
 app.component('Checkbox', Checkbox)
+app.component('FileUpload', FileUpload)
+app.component('Image', Image)
 app.component('InputNumber', InputNumber)
 app.component('InputText', InputText)
 app.component('Password', Password)
