@@ -40,7 +40,7 @@ const router = createRouter({
     {
       path: '/auth/register',
       name: 'register',
-      component: () => import('../views/auth/LoginView.vue')
+      component: () => import('../views/auth/RegisterView.vue')
     },
     {
       path: '/auth/access-denied',
@@ -59,6 +59,18 @@ const router = createRouter({
     }
 
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  // redirect to login page if user is not logged in and trying to access a restricted page
+  const protectedPages = ['/ride/publish', '/user/profile']
+  const authRequired = protectedPages.includes(to.path)
+  const loggedIn = localStorage.getItem('loggedUser')
+
+  if (authRequired && !loggedIn) {
+    return next('/auth/login')
+  }
+  next()
 })
 
 export default router

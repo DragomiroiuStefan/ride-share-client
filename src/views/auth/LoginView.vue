@@ -2,9 +2,32 @@
 import {ref} from 'vue';
 
 import Password from "primevue/password";
+import {useUserStore} from "@/stores/user.js";
+import {userService} from "@/services/UserService.js";
+import {apiClient} from "@/services/ApiClient.js";
+import router from "@/router/index.js";
 
 const email = ref('');
 const password = ref('');
+
+let userStore = useUserStore();
+
+function login() {
+  userService.login(email.value, password.value)
+      .then((response) => {
+        userStore.user = response.data;
+        localStorage.setItem('loggedUser', JSON.stringify(response.data));
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.headers.getAuthorization()}`
+        router.push({name: 'home'});
+      })
+      .catch(err => {
+        if (err?.response?.status === 401) {
+          console.log(err.response.data.message);
+        } else {
+          router.push({name: 'error'});
+        }
+      })
+}
 
 </script>
 
@@ -17,34 +40,24 @@ const password = ref('');
         <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius: 53px">
           <div class="text-center mb-5">
             <div class="text-900 text-3xl font-medium mb-3">Welcome</div>
-            <span class="text-600 font-medium">Sign in to continue</span>
+            <span class="text-600 font-medium">Login to continue</span>
           </div>
 
-          <div>
-            <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
-            <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-30rem mb-5"
+          <form @submit.prevent="login">
+            <label for="email" class="block text-900 text-xl font-medium mb-2">Email</label>
+            <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-30rem mb-5"
                        style="padding: 1rem" v-model="email"/>
 
-            <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
-            <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="w-full mb-6"
+            <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
+            <Password id="password" v-model="password" placeholder="Password" :toggleMask="true" class="w-full mb-6"
                       inputClass="w-full" :inputStyle="{ padding: '1rem' }"></Password>
 
-            <Button label="Sign In" class="w-full p-3 text-xl"></Button>
-          </div>
+            <Button type="submit" label="Login" class="w-full p-3 text-xl"></Button>
+
+            <router-link to="/auth/register" class="text-blue-500">Don't have an account. Register</router-link>
+          </form>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.pi-eye {
-  transform: scale(1.6);
-  margin-right: 1rem;
-}
-
-.pi-eye-slash {
-  transform: scale(1.6);
-  margin-right: 1rem;
-}
-</style>

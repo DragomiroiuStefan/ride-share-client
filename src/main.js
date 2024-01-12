@@ -13,6 +13,7 @@ import 'primeicons/primeicons.css'
 import PrimeVue from "primevue/config";
 import Autocomplete from "primevue/autocomplete";
 import Avatar from "primevue/avatar";
+import BadgeDirective from 'primevue/badgedirective';
 import Button from "primevue/button";
 import Calendar from "primevue/calendar";
 import Card from "primevue/card";
@@ -21,6 +22,7 @@ import FileUpload from "primevue/fileupload";
 import Image from "primevue/image";
 import InputNumber from "primevue/inputnumber";
 import InputText from "primevue/inputtext";
+import Menu from "primevue/menu";
 import Password from "primevue/password";
 import Rating from "primevue/rating";
 import Steps from "primevue/steps";
@@ -44,11 +46,13 @@ app.component('FileUpload', FileUpload)
 app.component('Image', Image)
 app.component('InputNumber', InputNumber)
 app.component('InputText', InputText)
+app.component('Menu', Menu)
 app.component('Password', Password)
 app.component('Rating', Rating)
 app.component('Steps', Steps)
 app.component('Textarea', Textarea)
 app.component('Timeline', Timeline)
 
+app.directive('badge', BadgeDirective);
 
 app.mount('#app')
