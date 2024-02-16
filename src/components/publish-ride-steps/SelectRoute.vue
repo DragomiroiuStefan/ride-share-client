@@ -93,17 +93,24 @@ function sendDirectionsRequest() {
 }
 
 function setRide(result) {
-  let departureTime = rideStore.ride.date;
   for (const leg of result.routes[0].legs) {
     rideStore.ride.connections.push({
+      startLocation: getLocationFromAddress(leg.start_address),
+      endLocation: getLocationFromAddress(leg.end_address),
       startAddress: leg.start_address,
       endAddress: leg.end_address,
-      departureTime: departureTime,
-      arrivalTime: new Date(departureTime.getTime() + leg.duration.value * 1000),
-      duration: leg.duration
+      duration: leg.duration,
+      distance: leg.distance
     });
-    departureTime += departureTime + leg.duration;
   }
+}
+
+function getLocationFromAddress(address) {
+  const addressArray = address.split(",");
+  const cityAddress = addressArray[addressArray.length - 2].split(" ");
+  return cityAddress
+      .filter(city => city.match(/^[A-Z]/i))
+      .join(" ")
 }
 
 function addStop() {
@@ -152,7 +159,8 @@ function removeStop(waypoint) {
             </div>
           </template>
         </AutoComplete>
-        <Button @click="removeStop(waypoint)" class="ml-2" icon="pi pi-times" severity="secondary" text rounded aria-label="Cancel" />
+        <Button @click="removeStop(waypoint)" class="ml-2" icon="pi pi-times" severity="secondary" text rounded
+                aria-label="Cancel"/>
       </div>
       <AutoComplete
           id="arrival"

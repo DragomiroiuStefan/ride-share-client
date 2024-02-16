@@ -21,7 +21,7 @@ const router = createRouter({
       component: () => import('../views/RideView.vue')
     },
     {
-      path: '/ride/publish',
+      path: '/rides/publish',
       name: 'publishRide',
       props: true,
       component: () => import('../views/PublishRideView.vue')
@@ -63,7 +63,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if user is not logged in and trying to access a restricted page
-  const protectedPages = ['/ride/publish', '/user/profile']
+  const protectedPages = ['/rides/publish', '/user/profile']
   const authRequired = protectedPages.includes(to.path)
   const loggedIn = localStorage.getItem('loggedUser')
 
