@@ -16,6 +16,8 @@
   justify-content: center;
   padding-top: 1rem;
   margin-bottom: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
   border-top: 1px solid var(--surface-border);
 }
 </style>

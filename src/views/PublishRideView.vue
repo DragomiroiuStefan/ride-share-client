@@ -49,7 +49,7 @@ function decrementStep() {
     <div class="flex flex-column align-items-center my-4">
       <div class="panel flex flex-column gap-3 w-11">
         <h1 class="font-bold mb-4">Publish Ride</h1>
-        <Steps v-model:activeStep="active" :model="steps" class="mb-6"/>
+        <Steps v-model:activeStep="active" :model="steps" />
         <SelectDateAndSeats v-if="active === 0"/>
         <SelectRoute v-if="active === 1"/>
         <SelectSchedule v-if="active === 2"/>

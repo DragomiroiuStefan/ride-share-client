@@ -7,18 +7,22 @@ import {userService} from "@/services/UserService.js";
 import {useUserStore} from "@/stores/user.js";
 import router from "@/router/index.js";
 import {apiClient} from "@/services/ApiClient.js";
+import {useRoute} from "vue-router";
 
 let userStore = useUserStore();
+const route = useRoute()
 
 const user = ref({});
 
 function register() {
   userService.register(user.value)
       .then((response) => {
+        response.data.birthDate = new Date(response.data.birthDate);
         userStore.user = response.data;
         localStorage.setItem('loggedUser', JSON.stringify(response.data));
-        apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.headers.getAuthorization()}`
-        router.push({name: 'home'});
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.headers.getAuthorization()}`;
+        localStorage.setItem('jwt', response.headers.getAuthorization());
+        router.push(route.query.redirect || '/');
       })
       .catch(err => {
         if (err?.response?.status === 409) {

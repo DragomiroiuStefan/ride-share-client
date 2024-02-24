@@ -6,7 +6,7 @@ import {createPinia} from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-import 'primevue/resources/themes/lara-light-blue/theme.css'
+import 'primevue/resources/themes/aura-light-blue/theme.css'
 import 'primeflex/primeflex.css'
 import 'primeicons/primeicons.css'
 
@@ -20,6 +20,7 @@ import Card from "primevue/card";
 import Checkbox from "primevue/checkbox";
 import FileUpload from "primevue/fileupload";
 import Image from "primevue/image";
+import InputMask from 'primevue/inputmask';
 import InputNumber from "primevue/inputnumber";
 import InputText from "primevue/inputtext";
 import Menu from "primevue/menu";
@@ -28,14 +29,17 @@ import Rating from "primevue/rating";
 import Steps from "primevue/steps";
 import Textarea from "primevue/textarea";
 import Timeline from "primevue/timeline";
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-
+app.use(ToastService);
 app.use(PrimeVue, {ripple: true});
+
 app.component('Autocomplete', Autocomplete)
 app.component('Avatar', Avatar)
 app.component('Button', Button);
@@ -44,6 +48,7 @@ app.component('Card', Card)
 app.component('Checkbox', Checkbox)
 app.component('FileUpload', FileUpload)
 app.component('Image', Image)
+app.component('InputMask', InputMask)
 app.component('InputNumber', InputNumber)
 app.component('InputText', InputText)
 app.component('Menu', Menu)

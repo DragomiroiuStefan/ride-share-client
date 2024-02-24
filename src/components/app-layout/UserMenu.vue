@@ -1,5 +1,5 @@
 <script setup>
-import {baseURL} from "@/services/ApiClient.js";
+import {apiClient, baseURL} from "@/services/ApiClient.js";
 import {useUserStore} from "@/stores/user.js";
 import {ref} from "vue";
 import router from "@/router/index.js";
@@ -18,9 +18,13 @@ const items = ref([
     label: 'Logout',
     icon: 'pi pi-sign-out',
     command: () => {
+      userStore.user = {};
+      apiClient.defaults.headers.common['Authorization'] = null
       localStorage.removeItem("loggedUser");
       router.push({name: 'home'});
-      location.reload();
+      if (router.currentRoute._value.name === 'home') {
+        router.go();
+      }
     }
   }
 ]);

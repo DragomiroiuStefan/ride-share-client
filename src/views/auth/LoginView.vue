@@ -6,19 +6,23 @@ import {useUserStore} from "@/stores/user.js";
 import {userService} from "@/services/UserService.js";
 import {apiClient} from "@/services/ApiClient.js";
 import router from "@/router/index.js";
+import {useRoute} from "vue-router";
+
+let userStore = useUserStore();
+const route = useRoute()
 
 const email = ref('');
 const password = ref('');
 
-let userStore = useUserStore();
-
 function login() {
   userService.login(email.value, password.value)
       .then((response) => {
+        response.data.birthDate = new Date(response.data.birthDate);
         userStore.user = response.data;
         localStorage.setItem('loggedUser', JSON.stringify(response.data));
-        apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.headers.getAuthorization()}`
-        router.push({name: 'home'});
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.headers.getAuthorization()}`;
+        localStorage.setItem('jwt', response.headers.getAuthorization());
+        router.push(route.query.redirect || '/');
       })
       .catch(err => {
         if (err?.response?.status === 401) {
@@ -49,7 +53,7 @@ function login() {
                        style="padding: 1rem" v-model="email"/>
 
             <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
-            <Password id="password" v-model="password" placeholder="Password" :toggleMask="true" class="w-full mb-6"
+            <Password id="password" v-model="password" placeholder="Password" :feedback="false" :toggleMask="true" class="w-full mb-6"
                       inputClass="w-full" :inputStyle="{ padding: '1rem' }"></Password>
 
             <Button type="submit" label="Login" class="w-full p-3 text-xl"></Button>

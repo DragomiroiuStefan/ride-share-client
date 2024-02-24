@@ -10,7 +10,7 @@ const userStore = useUserStore();
 
 <template>
   <header>
-    <div class="header-bar flex justify-content-between align-items-center w-full h-4rem px-8 surface-ground shadow-5 fixed z-5">
+    <div class="header-bar flex justify-content-between align-items-center w-full h-5rem px-8 surface-card shadow-5 fixed z-5">
       <RouterLink to="/">
         <img alt="RideShare Logo" class="logo" src="../../assets/logo.svg" width="200"/>
       </RouterLink>
@@ -26,6 +26,6 @@ const userStore = useUserStore();
       </div>
       <UserMenu v-else/>
     </div>
-    <div class="space-bar h-4rem"/>
+    <div class="space-bar h-5rem"/>
   </header>
 </template>

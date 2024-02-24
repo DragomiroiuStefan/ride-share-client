@@ -93,15 +93,24 @@ function sendDirectionsRequest() {
 }
 
 function setRide(result) {
+  let departureTime = rideStore.ride.date;
+  let arrivalTime;
+
   for (const leg of result.routes[0].legs) {
+    arrivalTime = new Date(departureTime.getTime() + leg.duration.value * 1000);
+
     rideStore.ride.connections.push({
       startLocation: getLocationFromAddress(leg.start_address),
       endLocation: getLocationFromAddress(leg.end_address),
       startAddress: leg.start_address,
       endAddress: leg.end_address,
+      departureTime: departureTime,
+      arrivalTime: arrivalTime,
       duration: leg.duration,
       distance: leg.distance
     });
+
+    departureTime = arrivalTime;
   }
 }
 

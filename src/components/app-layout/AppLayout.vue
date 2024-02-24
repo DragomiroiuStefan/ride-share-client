@@ -7,7 +7,7 @@ import FooterBar from "@/components/app-layout/FooterBar.vue";
 <template>
   <HeaderBar/>
   <main>
-    <div class="content surface-100 py-6">
+    <div class="py-8">
       <slot/>
     </div>
   </main>
