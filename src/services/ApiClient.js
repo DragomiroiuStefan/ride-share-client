@@ -1,6 +1,8 @@
 import axios from "axios";
 
 export const baseURL = 'http://localhost:8080';
+export const userProfilePictureBaseURL = (userId, profilePicture) => `${baseURL}/user-upload/${userId}/${profilePicture}?t=`+ new Date().getTime() ;
+export const uploadProfilePictureServiceURL = 'http://localhost:8080/users/uploadProfilePicture';
 
 export const apiClient = axios.create({
   baseURL: baseURL,

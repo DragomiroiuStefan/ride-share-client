@@ -3,9 +3,13 @@ import FileUpload from 'primevue/fileupload';
 import Image from 'primevue/image';
 import AppLayout from "@/components/app-layout/AppLayout.vue";
 import {useUserStore} from "@/stores/user.js";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {userService} from "@/services/UserService.js";
-import {apiClient} from "@/services/ApiClient.js";
+import {
+  apiClient,
+  uploadProfilePictureServiceURL,
+  userProfilePictureBaseURL,
+} from "@/services/ApiClient.js";
 import router from "@/router/index.js";
 import {useToast} from "primevue/usetoast";
 import Toast from 'primevue/toast';
@@ -21,13 +25,8 @@ const formUser = ref({
   email: userStore.user.email,
   phoneNumber: userStore.user.phoneNumber
 })
-const userInfoChanged = ref(false)
 
-const onUpload = (event) => {
-  let filename = event.files[0].name;
-  userStore.user.profilePicture = filename;
-  console.log(userStore.user.profilePicture)
-};
+const userInfoChanged = ref(false)
 
 function updateUser() {
   userService.update(formUser.value)
@@ -64,6 +63,17 @@ function getAge(dateString) {
   }
   return age;
 }
+
+const onUpload = (event) => {
+  let fileExtension =  event.files[0].name.split('.').pop();
+  userStore.user.profilePicture = null; // force reload of images with src set to userStore.user.profilePicture
+  userStore.user.profilePicture = 'profile-picture.' + fileExtension;
+  localStorage.setItem('loggedUser', JSON.stringify(userStore.user));
+};
+
+const profilePictureSrc = computed(() => {
+  return userProfilePictureBaseURL(userStore.user.userId, userStore.user.profilePicture)
+})
 </script>
 
 <template>
@@ -75,10 +85,11 @@ function getAge(dateString) {
         <p>{{ getAge(userStore.user.birthDate) }} years</p>
 
         <div class="flex justify-content-start">
-          <Image :src="'http://localhost:8080/user-upload/1/' + userStore.user.profilePicture" alt="Profile Picture"
+          <Image v-if="userStore.user.profilePicture" :src="profilePictureSrc" alt="Profile Picture"
                  width="250" preview/>
+          <Avatar v-else icon="pi pi-user" class="mr-2" size="large" />
         </div>
-        <FileUpload mode="basic" name="profilePicture" url="http://localhost:8080/users/uploadProfilePicture"
+        <FileUpload mode="basic" name="profilePicture" :url="uploadProfilePictureServiceURL"
                     accept="image/*" :maxFileSize="10000000"
                     @upload="onUpload" :auto="true" chooseLabel="Change"/>
         <!--      <FileUpload name="userPhoto" url="http://localhost:8080/users/uploadPhoto" @upload="onUpload($event)" accept="image/*" :maxFileSize="5000000">-->

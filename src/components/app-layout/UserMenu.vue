@@ -1,7 +1,7 @@
 <script setup>
-import {apiClient, baseURL} from "@/services/ApiClient.js";
+import {apiClient, userProfilePictureBaseURL} from "@/services/ApiClient.js";
 import {useUserStore} from "@/stores/user.js";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import router from "@/router/index.js";
 
 const userStore = useUserStore();
@@ -32,12 +32,16 @@ const items = ref([
 const toggle = (event) => {
   menu.value.toggle(event);
 };
+
+const profilePictureSrc = computed(() => {
+  return userProfilePictureBaseURL(userStore.user.userId, userStore.user.profilePicture)
+})
 </script>
 
 <template>
   <div class="flex align-items-center gap-3" @click="toggle">
     <Avatar v-if="userStore.user.profilePicture" v-badge.danger="4" class="p-overlay-badge"
-            :image="baseURL + '/user-upload/1/Screenshot.jpg'" size="large" shape="circle"/>
+            :image="profilePictureSrc" size="large" shape="circle"/>
     <Avatar v-else v-badge.danger="4" class="p-overlay-badge" :label="userInitial" size="large" shape="circle"/>
     <p class="font-bold">{{ userStore.user.firstName }}</p>
   </div>
