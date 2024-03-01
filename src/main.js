@@ -18,6 +18,9 @@ import Button from "primevue/button";
 import Calendar from "primevue/calendar";
 import Card from "primevue/card";
 import Checkbox from "primevue/checkbox";
+import Column from "primevue/column";
+import Datatable from "primevue/datatable";
+import Dialog from "primevue/dialog";
 import FileUpload from "primevue/fileupload";
 import Image from "primevue/image";
 import InputMask from 'primevue/inputmask';
@@ -29,7 +32,6 @@ import Rating from "primevue/rating";
 import Steps from "primevue/steps";
 import Textarea from "primevue/textarea";
 import Timeline from "primevue/timeline";
-import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 
 
@@ -46,6 +48,9 @@ app.component('Button', Button);
 app.component('Calendar', Calendar)
 app.component('Card', Card)
 app.component('Checkbox', Checkbox)
+app.component('Column', Column)
+app.component('Datatable', Datatable)
+app.component('Dialog', Dialog)
 app.component('FileUpload', FileUpload)
 app.component('Image', Image)
 app.component('InputMask', InputMask)

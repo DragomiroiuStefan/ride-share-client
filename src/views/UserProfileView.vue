@@ -13,6 +13,7 @@ import {
 import router from "@/router/index.js";
 import {useToast} from "primevue/usetoast";
 import Toast from 'primevue/toast';
+import VehiclesCRUDTable from "@/components/VehiclesCRUDTable.vue";
 
 const toast = useToast();
 const userStore = useUserStore();
@@ -92,14 +93,6 @@ const profilePictureSrc = computed(() => {
         <FileUpload mode="basic" name="profilePicture" :url="uploadProfilePictureServiceURL"
                     accept="image/*" :maxFileSize="10000000"
                     @upload="onUpload" :auto="true" chooseLabel="Change"/>
-        <!--      <FileUpload name="userPhoto" url="http://localhost:8080/users/uploadPhoto" @upload="onUpload($event)" accept="image/*" :maxFileSize="5000000">-->
-        <!--        <template #empty>-->
-        <!--          <div class="flex align-items-center justify-content-center flex-column">-->
-        <!--            <i class="pi pi-cloud-upload border-2 border-circle p-5 text-7xl text-400 border-400" />-->
-        <!--            <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>-->
-        <!--          </div>-->
-        <!--        </template>-->
-        <!--      </FileUpload>-->
 
         <h2>Personal Info</h2>
         <div class="p-fluid w-24rem">
@@ -136,6 +129,10 @@ const profilePictureSrc = computed(() => {
         <Button label="Save" icon="pi pi-check" class="w-max" :disabled="!userInfoChanged" @click="updateUser"/>
 
         <Toast/>
+      </div>
+
+      <div class="panel flex flex-column gap-3 w-8">
+        <VehiclesCRUDTable/>
       </div>
     </div>
   </AppLayout>
