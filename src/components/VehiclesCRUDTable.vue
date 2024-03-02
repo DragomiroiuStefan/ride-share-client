@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import {vehicleService} from "@/services/VehicleService.js";
@@ -8,6 +8,9 @@ import {useToast} from "primevue/usetoast";
 import InputNumber from "primevue/inputnumber";
 import router from "@/router/index.js";
 import {userVehicleURL} from "@/services/ApiClient.js";
+import {maxLength, required} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
+import ValidationErrors from "@/components/base/ValidationErrors.vue";
 
 const toast = useToast();
 const userStore = useUserStore();
@@ -18,7 +21,16 @@ const deleteVehicleDialog = ref(false);
 const vehicle = ref({});
 const selectedVehicle = ref({});
 const edit = ref();
-const submitted = ref(false);
+
+const vehicleRules = computed(() => ({
+  plateNumber: {required, maxLength: maxLength(20)},
+  brand: {required, maxLength: maxLength(50)},
+  model: {required, maxLength: maxLength(50)},
+  color: {required, maxLength: maxLength(50)},
+  registrationYear: {required},
+  seats: {required},
+}))
+const v = useVuelidate(vehicleRules, vehicle, {$autoDirty: true})
 
 onMounted(() => {
   getVehicles();
@@ -39,13 +51,13 @@ function getVehicles() {
 const openNew = () => {
   edit.value = false;
   vehicle.value = {};
-  submitted.value = false;
+  v.value.$reset();
   vehicleDialog.value = true;
 };
 
 const hideDialog = () => {
   vehicleDialog.value = false;
-  submitted.value = false;
+  v.value.$reset();
 };
 
 const editVehicle = (editVehicle) => {
@@ -59,8 +71,10 @@ const confirmDeleteVehicle = (editVehicle) => {
   deleteVehicleDialog.value = true;
 };
 
-const saveVehicle = () => {
-  submitted.value = true;
+const saveVehicle = async () => {
+  const isFormCorrect = await v.value.$validate()
+  if (!isFormCorrect) return
+
   vehicle.value.owner = userStore.user.userId;
 
   if (edit.value) {
@@ -130,7 +144,7 @@ const vehicleImageSrc = (image) => {
     <Column header="Image">
       <template #body="slotProps">
         <img v-if="slotProps.data.image" :src="vehicleImageSrc(slotProps.data.image)" alt="Vehicle Image" class="w-6rem border-round" />
-        <p v-else>Missing Image</p>
+        <i v-else class="pi pi-file-excel"></i>
       </template>
     </Column>
     <Column field="plateNumber" header="Plate Number"></Column>
@@ -155,40 +169,40 @@ const vehicleImageSrc = (image) => {
     <div class="field">
       <label for="plateNumber">Plate Number</label>
       <InputText id="plateNumber" v-model.trim="vehicle.plateNumber" required="true" autofocus
-                 :class="{ 'p-invalid': submitted && !vehicle.plateNumber }"/>
-      <small class="p-invalid" v-if="submitted && !vehicle.plateNumber">Plate Number is required.</small>
+                 :class="{ 'p-invalid': v.plateNumber.$errors.length }"/>
+      <ValidationErrors :errors="v.plateNumber.$errors"/>
     </div>
     <div class="field">
       <label for="brand">Brand</label>
       <InputText id="brand" v-model.trim="vehicle.brand" required="true" autofocus
-                 :class="{ 'p-invalid': submitted && !vehicle.brand }"/>
-      <small class="p-invalid" v-if="submitted && !vehicle.brand">Brand is required.</small>
+                 :class="{ 'p-invalid': v.brand.$errors.length }"/>
+      <ValidationErrors :errors="v.brand.$errors"/>
     </div>
     <div class="field">
       <label for="model">Model</label>
       <InputText id="model" v-model.trim="vehicle.model" required="true" autofocus
-                 :class="{ 'p-invalid': submitted && !vehicle.model }"/>
-      <small class="p-invalid" v-if="submitted && !vehicle.model">Model is required.</small>
+                 :class="{ 'p-invalid': v.model.$errors.length }"/>
+      <ValidationErrors :errors="v.model.$errors"/>
     </div>
     <div class="field">
       <label for="color">Color</label>
       <InputText id="color" v-model.trim="vehicle.color" required="true" autofocus
-                 :class="{ 'p-invalid': submitted && !vehicle.color }"/>
-      <small class="p-invalid" v-if="submitted && !vehicle.color">Color is required.</small>
+                 :class="{ 'p-invalid': v.color.$errors.length }"/>
+      <ValidationErrors :errors="v.color.$errors"/>
     </div>
     <div class="field">
       <label for="registrationYear">Registration Year</label>
       <InputNumber id="registrationYear" v-model="vehicle.registrationYear" mode="decimal" :min="2000"
                    :max="new Date().getFullYear() "
                    :useGrouping="false" showButtons
-                   :class="{ 'p-invalid': submitted && !vehicle.registrationYear }"/>
-      <small class="p-invalid" v-if="submitted && !vehicle.registrationYear">Registration Year is required.</small>
+                   :class="{ 'p-invalid': v.registrationYear.$errors.length }"/>
+      <ValidationErrors :errors="v.registrationYear.$errors"/>
     </div>
     <div class="field">
       <label for="seats">Seats</label>
       <InputNumber id="seats" v-model="vehicle.seats" mode="decimal" :min="1" :max="10" showButtons
-                   :class="{ 'p-invalid': submitted && !vehicle.seats }"/>
-      <small class="p-invalid" v-if="submitted && !vehicle.seats">Seats is required.</small>
+                   :class="{ 'p-invalid': v.seats.$errors.length }"/>
+      <ValidationErrors :errors="v.seats.$errors"/>
     </div>
     <div class="field">
       <label for="image">Image</label>
